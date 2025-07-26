@@ -1,2 +1,12 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    InstaClone
+{% endblock %}
+
+{% for p in posts %}
+  <div class="container">
+    <img src="{{ p.post.url }}" alt="">
+  </div>
+{% endfor %}
+

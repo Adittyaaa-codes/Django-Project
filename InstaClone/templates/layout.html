@@ -27,5 +27,22 @@
     </form>
   </div>
 </nav>
+
+{% for p in posts %}
+  {% comment %} <div class="container">
+    <img src="{{ p.post.url }}" alt="">
+  </div> {% endcomment %}
+
+  <div class="card" style="width: 18rem;">
+  <img src="{{ p.post.url }}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">{{p.user.username}}</h5>
+    <p class="card-text">{{p.caption}}</p>
+    {% comment %} <a href="#" class="btn btn-primary">Go somewhere</a> {% endcomment %}
+  </div>
+</div>
+
+{% endfor %}
+
 </body>
 </html>
