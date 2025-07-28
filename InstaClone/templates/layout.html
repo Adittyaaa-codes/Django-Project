@@ -1,48 +1,40 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"  data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {% block title %}
-        InstaClone
-        {% endblock %}
-    </title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}InstaClone{% endblock %}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" 
-    crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <script src="{% static 'script.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <script src="{% static 'script.js' %}"></script>
 </head>
+
 <body>
-    <nav class="navbar bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand">InstaClone</a>
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left Sidebar -->
+    <div class="col-md-1 sidebar d-flex align-items-center py-4" style="z-index: 1020;">
+      <button class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Home"><i class="bi bi-house fs-4"></i></button>
+      <button class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Fast"><i class="bi bi-search fs-4"></i></button>
+      <a href="{% url 'create_post' %}" class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Upload">
+          <i class="bi bi-plus-square fs-4"></i>
+      </a>
+      
+    </div>
 
-{% for p in posts %}
-  {% comment %} <div class="container">
-    <img src="{{ p.post.url }}" alt="">
-  </div> {% endcomment %}
-
-  <div class="card" style="width: 18rem;">
-  <img src="{{ p.post.url }}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">{{p.user.username}}</h5>
-    <p class="card-text">{{p.caption}}</p>
-    {% comment %} <a href="#" class="btn btn-primary">Go somewhere</a> {% endcomment %}
+    <!-- Main Content -->
+    <div class="col-md-11 main-content py-4 d-flex justify-content-center">
+      <div class="w-100" style="max-width: 600px;">
+        {% block main_content %}
+        {% endblock %}
+      </div>
+    </div>
   </div>
 </div>
-
-{% endfor %}
-
 </body>
 </html>
+

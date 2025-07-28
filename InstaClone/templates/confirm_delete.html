@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    confirm delete
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Are you sure?{% endblock %}
+
+{% block main_content %}
+
+<h2 class="text-center mb-5">Are you sure that you want to delelte this post?</h2>
+<div class="creatingpost">
+    <form method="post" class="p-4 border rounded bg-dark text-white" style="max-width: 600px; margin: auto;">
+        {% csrf_token %}
+    <button class="btn btn-danger" type=submit>
+        Delete
+    </button>
+    <a href="{% url 'home_page' %}" class="btn btn-success">Cancel</a>
+    </form>
+    <br>
+    
+</div>
+{% endblock %}

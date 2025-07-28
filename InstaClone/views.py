@@ -1,31 +1,92 @@
 from django.shortcuts import render
 from .models import InstaPost
-from .forms import PostingInsta
+from .forms import PostingInsta,Register,CommentForm
 from django.shortcuts import get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 # Create your views here.
 
 def index(request):
     posts = InstaPost.objects.all().order_by('-uploaded_at')
-    return render(request,'layout.html',{"posts" : posts})
+    comment_form = CommentForm()
 
-# def create_post(request):
-#     if request.method == 'POST':
-#         form = PostingInsta(request.POST)
-#         if form.is_valid():
-#             fpost = form.save(commit=False)
-#             fpost.user = request.user
-#             fpost.save()
-#     else:
-#         form = PostingInsta()
+    return render(request, 'index.html', {
+        'posts': posts,
+        'comment_form': comment_form
+    })
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostingInsta(request.POST, request.FILES)  
+        if form.is_valid():
+            fpost = form.save(commit=False)
+            fpost.user = request.user
+            fpost.save()
+            return redirect('home_page')
+    else:
+        form = PostingInsta()
+
+    return render(request, "posting.html", {'form': form})
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(InstaPost, id=post_id, user=request.user)
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect('home_page')  
+
+    return render(request, 'confirm_delete.html', {'post': post})
+
+def register(request):
+    form = Register()
+    return render(request, 'register.html', {'form': form})
+
+@csrf_exempt  
+def toggle_like(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post = InstaPost.objects.get(id=post_id)
+
+        liked_posts = request.session.get('liked_posts', [])
+
+        if post_id in liked_posts:
+            post.likes -= 1
+            liked_posts.remove(post_id)
+            liked = False
+        else:
+            post.likes += 1
+            liked_posts.append(post_id)
+            liked = True
+
+        post.save()
+        request.session['liked_posts'] = liked_posts
+
+        return JsonResponse({'likes': post.likes, 'liked': liked})
+    
+def view_comments(request, post_id):
+    post = InstaPost.objects.get(id=post_id)
+    comments = post.comments.all()
+    form = CommentForm()
+
+    return render(request, 'comments.html', {
+        'post': post,
+        'comments': comments,
+        'comment_form': form
+    })
+    
+@csrf_exempt
+def post_comment(request, post_id):
+    if request.method == 'POST':
+        post = InstaPost.objects.get(id=post_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            return redirect('view_comments', post_id=post.id)
         
-#     return render(request, "posting.html" , {'form' : form})
-
-# def delete_post(request, post_id):
-#     post = get_object_or_404(InstaPost, id=post_id, user=request.user)
-
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('index')  
-
-#     return render(request, 'confirm_delete.html', {'post': post})

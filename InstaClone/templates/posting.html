@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}Create a Post{% endblock %}
+
+{% block main_content %}
+
+<h2 class="text-center mb-5">Upload a picture with caption</h2>
+<div class="creatingpost">
+    <form method="post" enctype='multipart/form-data' class="p-4 border rounded bg-dark text-white" style="max-width: 600px; margin: auto;">
+        {% csrf_token %}
+        {{form.as_p}}
+
+    <button class="btn btn-success" type=submit>
+        Submit
+    </button>
+    <a href="{% url 'home_page' %}" class="btn btn-warning">Discard</a>
+    </form>
+    
+</div>
+{% endblock %}

@@ -1,12 +1,45 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    InstaClone
+
+{% block title %}InstaClone{% endblock %}
+
+{% block main_content %}
+  {% for p in posts %}
+    <div class="card bg-black border-0 rounded-0 text-white mb-4 text-start">
+      <!-- Post Header -->
+      <div class="d-flex align-items-center justify-content-between px-3 pt-3">
+        <div class="d-flex align-items-center">
+          <div class="bg-secondary rounded-circle me-2" style="width: 32px; height: 32px;"></div>
+          <strong>{{ p.user.username }}</strong>
+        </div>
+        <div class="dropdown text-end">
+            <a href="{% url 'confirm_delete' p.id %}" class="btn btn-danger btn-sm float-end">
+                  Delete
+            </a>
+        </div>
+
+
+      </div>
+
+      <!-- Post Image -->
+      <img src="{{ p.post.url }}" class="card-img-top rounded-0 mt-3" alt="Post image">
+
+      <div class="d-flex justify-content-start align-items-center px-3 pt-3 pb-2">
+        <button class="btn p-0 border-0 bg-transparent me-2"
+        onclick="toggleLike(this)" data-post-id="{{ p.id }}">
+        <i class="bi {% if p.id in request.session.liked_posts %}bi-heart-fill text-danger{% else %}bi-heart{% endif %} fs-5"></i>
+        </button>
+        <span class="me-3">{{ p.likes }}</span>
+        <a href="{% url 'view_comments' p.id %}" class="btn p-0 border-0 bg-transparent">
+        <i class="bi bi-chat fs-5"></i>
+        </a>
+      </div>
+
+      <div class="px-3 pb-3">
+        <p class="mb-1"><strong>{{ p.user.username }}</strong> {{ p.caption }}</p>
+      </div>
+    </div>
+  {% endfor %}
 {% endblock %}
 
-{% for p in posts %}
-  <div class="container">
-    <img src="{{ p.post.url }}" alt="">
-  </div>
-{% endfor %}
 
