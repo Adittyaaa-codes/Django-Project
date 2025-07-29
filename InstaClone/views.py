@@ -3,8 +3,9 @@ from .models import InstaPost
 from .forms import PostingInsta,Register,CommentForm
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseForbidden
 
 # Create your views here.
 
@@ -45,8 +46,12 @@ def register(request):
     form = Register()
     return render(request, 'register.html', {'form': form})
 
-@csrf_exempt  
+@csrf_exempt
+@login_required  
 def toggle_like(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("You must be logged in to like posts.")
+    
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
         post = InstaPost.objects.get(id=post_id)
@@ -67,6 +72,7 @@ def toggle_like(request):
 
         return JsonResponse({'likes': post.likes, 'liked': liked})
     
+@login_required
 def view_comments(request, post_id):
     post = InstaPost.objects.get(id=post_id)
     comments = post.comments.all()
@@ -79,7 +85,11 @@ def view_comments(request, post_id):
     })
     
 @csrf_exempt
+@login_required
 def post_comment(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("You must be logged in to comment.")
+    
     if request.method == 'POST':
         post = InstaPost.objects.get(id=post_id)
         form = CommentForm(request.POST)
@@ -90,3 +100,20 @@ def post_comment(request, post_id):
             comment.save()
             return redirect('view_comments', post_id=post.id)
         
+def register(request):
+    if request.method == 'POST':
+        form = Register(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            login(request, user)
+            return redirect('home_page')
+    else:
+        form = Register()
+        
+    return render(request, 'registration/login.html', {'form':form})   
+
+def logout(request):
+    if request.method == 'POST':
+        return render(request, 'registration/logout.html')

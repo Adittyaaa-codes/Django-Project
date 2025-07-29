@@ -4,6 +4,7 @@
 {% block title %}InstaClone{% endblock %}
 
 {% block main_content %}
+
   {% for p in posts %}
     <div class="card bg-black border-0 rounded-0 text-white mb-4 text-start">
       <!-- Post Header -->
@@ -13,9 +14,11 @@
           <strong>{{ p.user.username }}</strong>
         </div>
         <div class="dropdown text-end">
+            {% if  p.user == user%}
             <a href="{% url 'confirm_delete' p.id %}" class="btn btn-danger btn-sm float-end">
                   Delete
             </a>
+            {% endif %}
         </div>
 
 

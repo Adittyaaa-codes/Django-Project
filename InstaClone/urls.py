@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.views import LogoutView
 from . import views
 
 urlpatterns = [
@@ -8,4 +9,6 @@ urlpatterns = [
     path('like/', views.toggle_like, name='toggle_like'),
     path('comments/<int:post_id>/', views.view_comments, name='view_comments'),
     path('comment/<int:post_id>/', views.post_comment, name='post_comment'),
+    path('register', views.register, name='register'),
+    path('logout/', views.logout, name='logout'),
 ]
