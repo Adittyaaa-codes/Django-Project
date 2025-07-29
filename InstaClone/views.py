@@ -114,6 +114,6 @@ def register(request):
         
     return render(request, 'registration/login.html', {'form':form})   
 
-def logout(request):
-    if request.method == 'POST':
-        return render(request, 'registration/logout.html')
+
+def loggingout(request):
+    return render(request, 'registration/logout.html')
