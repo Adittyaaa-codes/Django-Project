@@ -11,8 +11,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100..400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <script src="{% static 'script.js' %}"></script>
 </head>
@@ -21,46 +20,54 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Left Sidebar -->
-    <div class="col-md-1 sidebar d-flex align-items-center py-4" style="z-index: 1020;">
-      <button class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Home"><i class="bi bi-house fs-4"></i></button>
-      <button class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Fast"><i class="bi bi-search fs-4"></i></button>
-      <a href="{% url 'create_post' %}" class="btn btn-lg bg-transparent border-0 text-white mb-3" title="Upload">
-          <i class="bi bi-plus-square fs-4"></i>
-      </a>
+    <div class="sidebar d-flex align-items-center py-4">
+      <div class="mb-3">
+        <button class="btn btn-lg bg-transparent border-0 text-white" title="Home">
+          <i class="bi bi-house fs-4"></i>
+        </button>
+      </div>
 
+      <div class="mb-3">
+        <button class="btn btn-lg bg-transparent border-0 text-white" title="Search">
+          <i class="bi bi-search fs-4"></i>
+        </button>
+      </div>
+
+      <div class="mb-3">
+        <a href="{% url 'create_post' %}" class="btn btn-lg bg-transparent border-0 text-white" title="Upload">
+          <i class="bi bi-plus-square fs-4"></i>
+        </a>
+      </div>
     </div>
 
     <!-- Main Content -->
     <div class="col-md-11 main-content py-4 d-flex flex-column align-items-center">
   
-  <!-- Top Bar: Full width above main content -->
-  <div class="w-100 px-3 mb-3 d-flex justify-content-between align-items-center border-bottom border-4 border-grey">
-    <div class="logo">
-      <h3 style="font-family: 'Cedarville Cursive', cursive;">InstaClone</h3>
+      <!-- Top Bar: Full width above main content -->
+      <div class="w-100 px-3 mb-3 d-flex justify-content-between align-items-center border-bottom border-4 border-grey">
+        <div class="logo">
+          <h3 style="font-family: Playwrite HU, cursive;">InstaClone</h3>
+        </div>
+        <div class="top-bar text-end">
+          {% if user.is_authenticated %}
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-warning btn-sm my-2" type='submit'>Logout</button>
+          </form>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-warning btn-sm">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary btn-sm">Register</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="w-100" style="max-width: 600px;">
+        {% block main_content %}
+        {% endblock %}
+      </div>
     </div>
-    <div class="top-bar text-end ">
-      {% if user.is_authenticated %}
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button class="btn btn-warning btn-sm my-2" type='submit'>Logout</button>
-      </form>
-      {% else %}
-        <a href="{% url 'login' %}" class="btn btn-warning btn-sm">Login</a>
-        <a href="{% url 'register' %}" class="btn btn-secondary btn-sm">Register</a>
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- Main Content Area -->
-  <div class="w-100" style="max-width: 600px;">
-    {% block main_content %}
-    {% endblock %}
-  </div>
-
-</div>
-
   </div>
 </div>
 </body>
 </html>
-
