@@ -27,8 +27,7 @@
             <div class="card-body p-3">
                 <div class="d-flex align-items-center mb-3">
                     <button class="btn p-0 border-0 bg-transparent me-3" 
-                            onclick="toggleLike(this)" 
-                            data-post-id="{{ p.id }}">
+                            onclick="toggleLike(this)">
                         <i class="bi {% if p.id in request.session.liked_posts %}bi-heart-fill text-danger{% else %}bi-heart{% endif %} fs-4"></i>
                     </button>
                     <a href="{% url 'view_comments' p.id %}" class="btn p-0 border-0 bg-transparent me-3">
